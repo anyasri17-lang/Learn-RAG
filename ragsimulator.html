@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG Simulator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI,sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    width:1000px;
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 15px 40px rgba(0,0,0,.1);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    text-align:center;
+    color:gray;
+    margin-bottom:30px;
+}
+
+.pipeline{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+}
+
+.step{
+    width:140px;
+    padding:15px;
+    border-radius:12px;
+    background:#eef4ff;
+    text-align:center;
+    transition:.4s;
+    opacity:.4;
+}
+
+.step.active{
+    background:#4f8cff;
+    color:white;
+    transform:translateY(-8px);
+    opacity:1;
+}
+
+.arrow{
+    font-size:24px;
+    color:#999;
+}
+
+.panel{
+    background:#fafafa;
+    border-radius:12px;
+    padding:20px;
+    min-height:180px;
+    line-height:1.8;
+}
+
+button{
+    display:block;
+    margin:25px auto 0;
+    padding:12px 28px;
+    border:none;
+    background:#4f8cff;
+    color:white;
+    font-size:16px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#2d74ff;
+}
+
+pre{
+    white-space:pre-wrap;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>High-Level RAG Simulator</h1>
+<p class="subtitle">Retrieval Augmented Generation</p>
+
+<div class="pipeline">
+
+<div class="step">📄<br>Document</div>
+<div class="arrow">→</div>
+
+<div class="step">✂️<br>Chunk</div>
+<div class="arrow">→</div>
+
+<div class="step">🔢<br>Embedding</div>
+<div class="arrow">→</div>
+
+<div class="step">🗄️<br>Vector DB</div>
+<div class="arrow">→</div>
+
+<div class="step">❓<br>Question</div>
+<div class="arrow">→</div>
+
+<div class="step">🔍<br>Retrieve</div>
+<div class="arrow">→</div>
+
+<div class="step">🤖<br>LLM</div>
+
+</div>
+
+<div class="panel">
+<pre id="output">
+Click "Next Step" to watch how RAG works.
+</pre>
+</div>
+
+<button onclick="nextStep()">Next Step</button>
+
+</div>
+
+<script>
+
+const steps=document.querySelectorAll(".step");
+const output=document.getElementById("output");
+
+const messages=[
+
+`📄 Step 1: Collect Documents
+
+Example:
+• Company Handbook
+• Product Docs
+• FAQs
+
+These documents become the knowledge source.`,
+
+`✂️ Step 2: Split into Chunks
+
+Instead of one huge document...
+
+Chunk 1
+Chunk 2
+Chunk 3
+Chunk 4
+
+Smaller chunks are easier to search.`,
+
+`🔢 Step 3: Convert each chunk into Embeddings
+
+Chunk 1 → [0.12,0.45,0.78...]
+
+Chunk 2 → [0.91,0.18,0.34...]
+
+Embeddings capture semantic meaning.`,
+
+`🗄️ Step 4: Store Embeddings
+
+Vector Database
+
+📦 Chunk 1 + Vector
+📦 Chunk 2 + Vector
+📦 Chunk 3 + Vector
+
+Now everything is searchable.`,
+
+`❓ Step 5: User asks
+
+"How many leave days do employees get?"
+
+The question is also converted into an embedding.`,
+
+`🔍 Step 6: Similarity Search
+
+Compare Question Vector
+with all stored vectors.
+
+Best Matches:
+
+✅ Chunk 2
+✅ Chunk 4
+
+These chunks are retrieved.`,
+
+`🤖 Step 7: LLM Generates Answer
+
+Prompt sent to LLM:
+
+Question
++
+Retrieved Chunks
+
+↓
+
+Final Answer:
+
+Employees receive 20 annual leave days.
+
+The LLM answers using the retrieved context instead of relying only on its own training.`
+
+];
+
+let current=-1;
+
+function nextStep(){
+
+current++;
+
+if(current>=steps.length){
+current=0;
+}
+
+steps.forEach(s=>s.classList.remove("active"));
+steps[current].classList.add("active");
+
+output.textContent=messages[current];
+
+}
+
+</script>
+
+</body>
+</html>
